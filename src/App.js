@@ -1,25 +1,21 @@
-import './App.css';
+import User from './components/User';
+import Result from './components/Result';
+import Question from './components/Question';
+
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
 
 function App() {
   return (
-    <div className="main-box">
-        <form>
-          <div className="title"> 직업가치관검사 </div>
-          <div className="input-form">
-            <p>
-              이름 <br/>
-              <input type="text" className="name-input"/> 
-            </p>
-            <p>
-              성별 <br/>
-              <label> <input type="radio" className="gender-input" name="gender" value="male" />남자</label> <br/>
-              <label> <input type="radio" className="gender-input" name="gender" value="female" />여자</label> <br/>
-            </p>
-          </div>
-            <button type="submit">검사시작</button>
-        </form>
-      </div>
+    <BrowserRouter>
+      <Switch>
+        <Route path="/"><User /></Route>
+        <Route path="test"><Question /></Route>
+        <Route path="result"><Result /></Route>
+      </Switch>
+    </BrowserRouter>
   );
 }
+
+
 
 export default App;
