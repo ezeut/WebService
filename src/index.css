@@ -1,6 +1,21 @@
+@font-face {
+  font-family: "siwol1";
+  src: url("./fonts/siwol1.ttf");
+}
+
+@font-face {
+  font-family: "siwol2";
+  src: url("./fonts/siwol2.ttf");
+}
+
+@font-face {
+  font-family: "siwol3";
+  src: url("./fonts/siwol3.ttf");
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'siwol1', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;

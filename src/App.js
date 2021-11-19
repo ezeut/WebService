@@ -5,14 +5,21 @@ import Question from './components/Question';
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 
 function App() {
+  
   return (
-    <BrowserRouter>
-      <Switch>
-        <Route path="/"><User /></Route>
-        <Route path="test"><Question /></Route>
-        <Route path="result"><Result /></Route>
+      <BrowserRouter>
+        <Switch>
+          <Route exact path="/">
+            <User />
+          </Route>
+          <Route path="/test">
+            <Question />
+          </Route>
+          <Route path="/result">
+            <Result />
+          </Route>
       </Switch>
-    </BrowserRouter>
+      </BrowserRouter>
   );
 }
 
