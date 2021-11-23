@@ -2,7 +2,7 @@ import "../css/User.css"
 import React, {useState}  from "react";
 import {Link} from "react-router-dom";
 
-function User(){
+function Test(){
     let [name, setName] = useState('');
     let [gender, setGender] = useState('');
     let [disabled, setDisabled] = useState(true);
@@ -59,4 +59,4 @@ function User(){
     )
   }
 
-  export default User;
+  export default Test;

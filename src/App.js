@@ -1,6 +1,6 @@
-import User from './components/User';
+import Test from './components/index';
 import Result from './components/Result';
-import Test from './components/Test';
+import Question from './components/Question';
 import Example from './components/Example';
 
 
@@ -11,9 +11,9 @@ function App() {
   return (
       <BrowserRouter>
         <Switch>
-          <Route exact path="/"> <User /> </Route>
+          <Route exact path="/"> <Test /> </Route>
           <Route path="/example"> <Example /> </Route>
-          <Route path="/test"> <Test /> </Route>
+          <Route path="/question"> <Question /> </Route>
           <Route path="/result"> <Result /> </Route>
       </Switch>
       </BrowserRouter>

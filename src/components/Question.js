@@ -2,9 +2,10 @@ import "../css/question.css"
 import React, { useState } from "react";
 import ProgressBar from "./ProgressBar";
 import { Link } from 'react-router-dom';
+import Result from "./Result";
 
 
-function Example() {
+function Question() {
     let [percent, setPercent] = useState(0);
     let axios = require('axios');
     let [item, setItem] = useState([]);
@@ -23,13 +24,28 @@ function Example() {
     axios(config)
     .then(function (response) {
         res = JSON.stringify(response.data)
-        let arr = [JSON.parse(res).RESULT[0].question,JSON.parse(res).RESULT[0].answer01,JSON.parse(res).RESULT[0].answer02]
+        let arr = [];
+        for(let i=0; i<res.length; i++){
+            arr[i] = [JSON.parse(res).RESULT[i].question,JSON.parse(res).RESULT[i].answer01,JSON.parse(res).RESULT[i].answer02]
+        }
         setItem(arr)
-        
     })
     .catch(function (error) {
         console.log(error);
     });
+
+    function rendering() {
+        console.log(item);
+        const result = [];
+        for(let i=0; i<28; i++){
+            result.push(
+                <span key={i}>
+                    <div>{item}</div>
+                </span>
+            );
+        return result;
+        }
+    }
 
     function handleClick(e){
         setAnswer(e.target.value)
@@ -46,18 +62,16 @@ function Example() {
         
         <div className="main-box">
             <div>
-                <p>검사예시</p>
+                <p>검사</p>
                 <ProgressBar width={400} percent={1} />
             </div>
             <div>
             <div>
                 <div>
-                    {item[0]} <br />
-                    <label><input type='radio' name='ans' value='1' onClick={handleClick} />{item[1]}</label>
-                    <label><input type='radio' name='ans' value='2' onClick={handleClick} />{item[2]}</label>
+                    {rendering()}
                 </div>
                 <div>
-                    <Link to="./test">
+                    <Link to="./result">
                         <button type="submit" disabled={disabled}>검사시작</button>
                     </Link>
                 </div>
@@ -67,4 +81,4 @@ function Example() {
     );
 }
 
-export default Example;
+export default Question;
