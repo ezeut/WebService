@@ -1,9 +1,16 @@
-.progress-div {
+
+.progress-nav {
+    display: inline-block;
+}
+
+.progress-bar {
+    display: inline-block;
+    margin-top: 15px;
     background-color: rgb(233, 233, 233);
     border-radius: .5rem;
 }
 
-.progress {
+.progress-colored {
     background-color: rgb(62, 122, 235);
     height: 10px;
     border-radius: 1rem;

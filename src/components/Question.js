@@ -1,84 +1,87 @@
-import "../css/question.css"
-import React, { useState } from "react";
+import '../css/question.css';
+import useFetch from "./useFetch";
 import ProgressBar from "./ProgressBar";
-import { Link } from 'react-router-dom';
-import Result from "./Result";
+import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router";
 
+const Question = () => {
+    const history = useHistory();
+    const { data, error } = useFetch();
+    const [ start, setStart ] = useState(0);
+    const [ end, setEnd ] = useState(5);
+    const [ currentPage, setCurrentPage ] = useState(1);
+    const pageNumber = [];
+    const Page = Math.ceil(data?.length / 5);
+    let [answerList, setAnswerList] = useState([]);
 
-function Question() {
-    let [percent, setPercent] = useState(0);
-    let axios = require('axios');
-    let [item, setItem] = useState([]);
-    let [answer, setAnswer] = useState('');
-    let [disabled, setDisabled] = useState(true);
+    for (let i = 1; i <= Page; i++) {
+        pageNumber.push(i);
+    }
+    useEffect(() => {
+        setStart((currentPage - 1) * 5);
+        setEnd(currentPage * 5);
+    }, [currentPage]);
 
-    let res;
-    let config = {
-        method: 'get',
-        url: 'https://www.career.go.kr/inspct/openapi/test/questions?apikey=a1a6bd295f99062830aa64111bebad81&q=6',
-        headers: { 
-            'Cookie': 'KHANUSER=z1nls2tqru7fkd'
-        }
-    };
-
-    axios(config)
-    .then(function (response) {
-        res = JSON.stringify(response.data)
-        let arr = [];
-        for(let i=0; i<res.length; i++){
-            arr[i] = [JSON.parse(res).RESULT[i].question,JSON.parse(res).RESULT[i].answer01,JSON.parse(res).RESULT[i].answer02]
-        }
-        setItem(arr)
-    })
-    .catch(function (error) {
-        console.log(error);
-    });
-
-    function rendering() {
-        console.log(item);
-        const result = [];
-        for(let i=0; i<28; i++){
-            result.push(
-                <span key={i}>
-                    <div>{item}</div>
-                </span>
-            );
-        return result;
-        }
+    if (error) {
+        return <div>{error}</div>;
     }
 
-    function handleClick(e){
-        setAnswer(e.target.value)
-        if (answer !== null) {
-            setDisabled(false)
-        } 
+    const prevPage = () => {
+        if ((currentPage-1) === 0) {
+            alert("첫번째 페이지입니다.");
+        }
+        else {
+            setCurrentPage(currentPage => (currentPage-1));
+        }
     }
-
-    function updatePercent(field, val) {
-        setPercent({[field]: val});    
+    const nextPage = () => {
+        if (currentPage === Page) {
+            localStorage.setItem("answer", answerList);
+            history.push('/result');
+        }
+        else {
+            setCurrentPage(currentPage => (currentPage+1));
+        }
     }
-    
-    return (
-        
-        <div className="main-box">
+    const handleOnclick = (e) => {
+        let answer = [...answerList];
+        answer[(e.target.name-1)] = e.target.value;
+        setAnswerList(answer);
+    }
+        return (
             <div>
-                <p>검사</p>
-                <ProgressBar width={400} percent={1} />
-            </div>
-            <div>
-            <div>
-                <div>
-                    {rendering()}
+                <div className="question-main">
+                    <ProgressBar width={400} percent={(answerList.length)/28} />
+            {data?.slice(start, end).map((item) => (
+                <div key={item.qitemNo} className="question-box">
+                    <br />{item.question}<br/>
+                    <p>
+                        <label>
+                            <input 
+                                type='radio' name={item.qitemNo} value={item.answerScore01} 
+                                defaultChecked={answerList[item.qitemNo-1] === item.answerScore01}
+                                onClick={(handleOnclick)}/>
+                                {item?.answer01}
+                        </label>
+                        <label>
+                            <input type='radio' name={item.qitemNo} value={item.answerScore02} 
+                                defaultChecked={answerList[item.qitemNo-1] === item.answerScore02}
+                                onClick={(handleOnclick)}/>
+                                {item?.answer02}
+                        </label>
+                    </p>
+                    {console.log(answerList)}
                 </div>
-                <div>
-                    <Link to="./result">
-                        <button type="submit" disabled={disabled}>검사시작</button>
-                    </Link>
-                </div>
-            </div>
-            </div>
+            ))}
+            <nav style={{ listStyleType: "none", display: "inline-block" }}>
+                <button type="button" onClick={prevPage}>이전</button>
+                <button type="button" disabled={false} onClick={nextPage}>{currentPage === Page ? "제출": "다음"}</button>
+            </nav>
         </div>
-    );
+    </div>
+    )
 }
-
 export default Question;
+
+
+

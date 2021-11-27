@@ -1,62 +1,50 @@
-import "../css/User.css"
-import React, {useState}  from "react";
-import {Link} from "react-router-dom";
+import "../css/index.css"
+import React  from "react";
+import { useHistory } from "react-router-dom";
+import { useForm } from "react-hook-form";
 
-function Test(){
-    let [name, setName] = useState('');
-    let [gender, setGender] = useState('');
-    let [disabled, setDisabled] = useState(true);
-    let val = [];
+function Home(){
+  const history = useHistory();
+  const { register, handleSubmit, formState } = useForm({
+    mode: "onChange"
+  });
+  let userName = ''
+  let userGender = '';
+  const { isValid, errors } = formState;
+  const onSubmit = (data) => {
 
-    function handleDisabled(){
-        if ((val[0]===val[1])) {
-          setDisabled(false);
-        } else {
-          setDisabled(true);
-        }
-    }
+  };
 
-    function handleChange(e){
-        setName(e.target.value)
-        if (name !== null) {
-            val[0] = 1;
-        } else {
-            val[0] = 0;
-        }
-    }
+  const handleOnclick = (e) => {
+      userGender=e.target.value;
+      localStorage.setItem("gender", userGender);
+  }
+  const handleOnchange = (e) => {
+      userName=e.target.value;
+      localStorage.setItem("name", userName);
+  }
 
-    
-    function handleClick(e){
-        setGender(e.target.value)
-        if (gender !== null) {
-            val[1] = 1;
-        } else {
-            val[1] = 0;
-        }
-    }
-
-
-    return (
-      <div className="main-box">
-              <form>
+  return (
+    <div className="main-box">
+              <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="title"> 직업가치관검사 </div>
                   <div className="input-form">
                     <p>
                       이름 <br/>
-                      <input type="text" className="name-input" name="name" value={name} onChange={ handleChange }/> 
+                      <input {...register("name", {required: true})} type="text" className="name-input" placeholder="이름" onChange={handleOnchange}/>
+                      {errors.name && <p>이름을 입력해주세요.</p>} 
                     </p>
                     <p>
                       성별 <br/>
-                      <label> <input type="radio" className="gender-input" name="gender" value="male" onClick = {handleClick ,handleDisabled}/>남자</label> <br/>
-                      <label> <input type="radio" className="gender-input" name="gender" value="female" onClick = {handleClick, handleDisabled}/>여자</label> <br/>
-                    </p>
+                      <label><input {...register("gender", { required: true })} type="radio" value="100323" onClick={handleOnclick}/>남성</label>
+                      <label><input {...register("gender", { required: true })} type="radio" value="100324" onClick={handleOnclick}/>여성</label>
+                      </p>
                   </div>
-                  <Link to="./example">
-                    <button type="submit" disabled={disabled}>검사시작</button>
-                  </Link>
+                    <button type="submit" disabled={!isValid} onClick={()=>{
+                      history.push('/example');
+                    }}>검사시작</button>
               </form>
             </div>
-    )
+    );
   }
-
-  export default Test;
+  export default Home;

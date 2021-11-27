@@ -1,25 +1,33 @@
-import Test from './components/index';
+import Home from './components/index';
 import Result from './components/Result';
-import Question from './components/Question';
 import Example from './components/Example';
+import Question from './components/Question'
 
-
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
 
 function App() {
   
   return (
       <BrowserRouter>
         <Switch>
-          <Route exact path="/"> <Test /> </Route>
-          <Route path="/example"> <Example /> </Route>
-          <Route path="/question"> <Question /> </Route>
-          <Route path="/result"> <Result /> </Route>
+          <Route path="/test">
+            <Home />
+          </Route>
+          <Route path="/example">
+            <Example />
+          </Route>
+          <Route path="/question">
+            <Question />
+          </Route>
+          <Route path="/result">
+            <Result />
+          </Route>
+          <Route exact path="/">
+            <Redirect to = "/test" />
+          </Route>
       </Switch>
       </BrowserRouter>
   );
 }
-
-
 
 export default App;

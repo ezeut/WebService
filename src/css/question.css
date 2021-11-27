@@ -5,4 +5,27 @@ button {
     height: 50px;
     border: 2.2px solid rgb(172, 172, 172);
     border-radius: 5px;
-   }
+    font-family: 'siwol2';
+}
+.question-main {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    height: 300px;
+    width: 400px;
+    margin: -300px 0 0 -200px;
+
+  text-align: center;
+  font-family: 'siwol1';
+}
+.question-list {
+    text-align: center;
+}
+
+.question-box {
+    width: 400px;
+    height: 100px;
+    background-color: rgb(255, 251, 244);
+    text-align: center;
+    margin-top: 20px;
+}
