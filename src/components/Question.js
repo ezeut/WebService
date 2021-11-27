@@ -36,7 +36,7 @@ const Question = () => {
     }
     const nextPage = () => {
         if (currentPage === Page) {
-            localStorage.setItem("answer", answerList);
+            sessionStorage.setItem("answer", answerList);
             history.push('/result');
         }
         else {

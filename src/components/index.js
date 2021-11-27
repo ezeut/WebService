@@ -17,11 +17,11 @@ function Home(){
 
   const handleOnclick = (e) => {
       userGender=e.target.value;
-      localStorage.setItem("gender", userGender);
+      sessionStorage.setItem("gender", userGender);
   }
   const handleOnchange = (e) => {
       userName=e.target.value;
-      localStorage.setItem("name", userName);
+      sessionStorage.setItem("name", userName);
   }
 
   return (
