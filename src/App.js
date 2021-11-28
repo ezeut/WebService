@@ -1,7 +1,8 @@
 import Home from './components/index';
 import Result from './components/Result';
 import Example from './components/Example';
-import Question from './components/Question'
+import Question from './components/Question';
+import Last from './components/Last';
 
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
 
@@ -18,6 +19,9 @@ function App() {
           </Route>
           <Route path="/question">
             <Question />
+          </Route>
+          <Route path="/last">
+            <Last />
           </Route>
           <Route path="/result">
             <Result />

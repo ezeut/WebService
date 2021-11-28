@@ -1,62 +1,267 @@
-import React from "react";
-import { useEffect } from "react";
-import axios from "axios";
-import "../css/result.css";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Bar } from 'react-chartjs-2';
+import Chart from 'chart.js/auto';
+import { CategoryScale } from 'chart.js';
+import { useHistory } from 'react-router-dom';
+import '../css/Result.css';
 
-function Result() {
-    const arr = (localStorage.getItem('answer')).split(",");
+Chart.register(CategoryScale);
+
+const Result = () => {
+    const arr = (sessionStorage.getItem('answer')).split(",");
     let answers = '';
     for (let i = 0; i <arr.length; i++){
-        answers += (i+1)+'='+ arr[i]+' '
+        answers += 'B'+(i+1)+'='+ arr[i]+' '
     }
-    console.log(answers);
-    const params = {
-        targetSe: '100207',
-        name: localStorage.getItem('name'),
-        gender: localStorage.getItem('gender'),
-        school: '',
-        grade: '',
-        email: '',
-        startDtm: '',
-        answers: answers
-    }
+	const [result, setResult] = useState([]);
+	const [loading, setLoading] = useState(false);
+	const [job, setJob] = useState();
+	const [major, setMajor] = useState();
+	const [data, setdata] = useState({
+		labels: [
+			'능력발휘',
+			'자율성',
+			'보수',
+			'안정성',
+			'사회적 인정',
+			'사회봉사',
+			'자기계발',
+			'창의성',
+		],
+		datasets: [
+			{
+				label: '직업가치관 결과',
+				backgroundColor: 'rgba(61, 137, 224,0.4)',
+				hoverBackgroundColor: 'rgba(61, 137, 224,0.8)',
+				data: [],
+			},
+		],
+	});
 
-    useEffect(()=>{
-        async function fetch () {
-            try{
-                const res = await axios.post(
-                    'https://www.career.go.kr/inspct/openapi/test/report?apikey=a1a6bd295f99062830aa64111bebad81&qestrnSeq=6',
-                    params
-                );
-                const result = res.data.RESULT.url.split('seq=')[1];
-            }
-            catch (error) {
-                console.error(error);
-            }
-            
-        }
-    })
-    
-    
-    // method: 'post',
-    // headers: { 
-    //     'Cookie': 'KHANUSER=z1nls2tqru7fkd'
-    // }
-    // };
+	let history = useHistory();
 
-    
-    return (
-        <div className="result-box">
-            <h2>검사가 완료되었습니다.</h2>
-            <div>
-                <p>검사결과는 여러분이 직업을 선택할 때 상대적으로 어떠한 가치를 중요하게 생각하는지를 알려주고,<br/>
-                중요 가치를 충족시켜줄 수 있는 직업에 대해 생각해 볼 기회를 제공합니다.</p>
-                <div>
-                    <button >결과보기</button>
-                </div>
-            </div>
-        </div>
-    )
-}
+	const questionInfo = {
+		1: '능력발휘',
+		2: '자율성',
+		3: '보수',
+		4: '안정성',
+		5: '사회적 인정',
+		6: '사회봉사',
+		7: '자기계발',
+		8: '창의성',
+	};
+	const name = sessionStorage.getItem('name');
+	const gender = sessionStorage.getItem('gender');
+	
+	useEffect(() => {
+		const params = {
+            apikey: 'a1a6bd295f99062830aa64111bebad81',
+            qestrnSeq: '6',
+            targetSe: '100209',
+            name: name,
+            gender: gender,
+            grade: '2',
+            startDtm: new Date().getTime(),
+            answers: answers
+		};
+		const fetch = async () => {
+			const res = await axios.post(
+				'https://www.career.go.kr/inspct/openapi/test/report?apikey=e772916f49d49980fd515f04c9ebc4ba&qestrnSeq=6',
+				params,
+			);
+			const seq = res.data.RESULT.url.split('seq=')[1];
+			const res2 = await axios.get(
+				'https://www.career.go.kr/inspct/api/psycho/report?seq=' + seq,
+			);
+			const score = res2.data.result.wonScore
+				.split(' ')
+				.filter((x) => x);
+			const result = score.map((x) => {
+				const split_data = x.split('=');
+				return { num: split_data[0], value: parseInt(split_data[1]) };
+			});
+
+			await setdata(() => {
+				let temp = { ...data };
+				temp.datasets[0].data = result.map((x) => {
+					return x.value;
+				});
+				return temp;
+			});
+
+			result.sort((a, b) => {
+				return b.value - a.value;
+			});
+			setResult(result);
+			const [value1, value2] = [result[0].num, result[1].num];
+			const job_result = await axios.get(
+				`https://inspct.career.go.kr/inspct/api/psycho/value/jobs?no1=${value1}&no2=${value2}`,
+			);
+			const major_result = await axios.get(
+				`https://inspct.career.go.kr/inspct/api/psycho/value/majors?no1=${value1}&no2=${value2}`,
+			);
+			setJob(() => {
+				const temp = { 1: [], 2: [], 3: [], 4: [], 5: [] };
+				job_result.data.forEach((a) => {
+					temp[a[2]].push(a[1]);
+				});
+				return temp;
+			});
+			setMajor(() => {
+				const temp = {
+					0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [],
+				};
+				major_result.data.forEach((a) => {
+					if (a[2] !== 0) {
+						temp[0].push(a[1]);
+					}
+					temp[a[2]].push(a[1]);
+				});
+				return temp;
+			});
+			setLoading(true);
+		};
+		fetch();
+	}, []);
+
+	if (!loading) {
+		return <span>Loading...</span>;
+	}
+
+	
+	return (
+		<div className="result-box">
+			<h2 className="result-title">/ 직업가치관검사 결과 /</h2>
+			<table className="user-table">
+				<thead>
+					<tr>
+						<th>이름</th>
+						<th>성별</th>
+						<th>검사일</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>{name}</td>
+						<td>{gender === '남자' ? '남자' : '여자'}</td>
+						<td>{new Date().toLocaleString('kor').slice(0, 14)}</td>
+					</tr>
+				</tbody>
+			</table>
+			<h2 className="sub-result-title"> // 직업가치관 결과 //</h2>
+			<p>
+				직업생활과 관련하여{' '} {name} 님은{' '} {questionInfo[result[0].num]}(와)과{' '}
+				{questionInfo[result[1].num]}(을)를 가장 중요하게 생각합니다.
+				<br />
+				반면에{' '}{questionInfo[result[result.length - 1].num]},{' '}{questionInfo[result[result.length - 2].num]}
+				은 상대적으로 덜 중요하게 생각합니다.
+			</p>
+			<Bar
+				data={data}
+				width={'100px'}
+				height={'50px'}
+				options={{maintainAspectRatio: true,
+				}}
+			/>
+			<br />
+			<h2 className="sub-result-title"> // 나의 가치관과 관련이 높은 직업 //</h2>
+			<div style={{textAlign: "center"}}><h3 className="sub-sub-title"> / 종사자 평균 학력별 / </h3></div>
+			<table className="">
+				<thead>
+					<tr>
+						<th>분야</th>
+						<th>직업명</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th style={{ minWidth: '90px' }}>
+							중졸이하
+						</th>
+						<td>{job[1].join(', ')}</td>
+					</tr>
+					<tr>
+						<th>고졸</th>
+						<td>{job[2].join(', ')}</td>
+					</tr>
+					<tr>
+						<th>전문대졸</th>
+						<td>{job[3].join(', ')}</td>
+					</tr>
+					<tr>
+						<th>대졸</th>
+						<td>{job[4].join(', ')}</td>
+					</tr>
+					<tr>
+						<th>대학원졸</th>
+						<td>{job[5].join(', ')}</td>
+					</tr>
+				</tbody>
+			</table>
+			<br />
+			<div style={{textAlign: "center"}}><h3 className="sub-sub-title"> / 종사자 평균 전공별 / </h3></div>
+			
+			<table className="">
+				<thead>
+					<tr>
+						<th className="table-th">분야</th>
+						<th className="table-th">직업명</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th style={{ minWidth: '100px' }}>
+							계열무관
+						</th>
+						<td>{major[0].join(', ')}</td>
+					</tr>
+					<tr>
+						<th>인문</th>
+						<td>{major[1].join(', ')}</td>
+					</tr>
+					<tr>
+						<th>사회</th>
+						<td>{major[2].join(', ')}</td>
+					</tr>
+					<tr>
+						<th>교육</th>
+						<td>{major[3].join(', ')}</td>
+					</tr>
+					<tr>
+						<th>공학</th>
+						<td>{major[4].join(', ')}</td>
+					</tr>
+					<tr>
+						<th>자연</th>
+						<td>{major[5].join(', ')}</td>
+					</tr>
+					<tr>
+						<th>의학</th>
+						<td>{major[6].join(', ')}</td>
+					</tr>
+					<tr>
+						<th>예체능</th>
+						<td>{major[7].join(', ')}</td>
+					</tr>
+				</tbody>
+			</table>
+			<p className="foot">
+				<button
+					type="button"
+					className="result-btn"
+					onClick={() => {
+						sessionStorage.removeItem('name');
+						sessionStorage.removeItem('gender');
+						sessionStorage.removeItem('answer');
+						history.push('/');
+					}}
+				>
+					다시 검사
+				</button>
+			</p>
+		</div>
+	);
+};
 
 export default Result;

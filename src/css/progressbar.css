@@ -6,14 +6,13 @@
 .progress-bar {
     display: inline-block;
     margin-top: 15px;
-    background-color: rgb(233, 233, 233);
+    background-color: rgb(224, 224, 224);
     border-radius: .5rem;
 }
 
 .progress-colored {
-    background-color: rgb(62, 122, 235);
+    background-color: rgb(129, 194, 255);
     height: 10px;
     border-radius: 1rem;
-    transition: 1s ease;
-    transition-delay: 0.5s;
+    transition: 0.7s ease;
 }

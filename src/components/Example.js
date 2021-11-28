@@ -8,6 +8,7 @@ function Example() {
     const { data, error } = useFetch();
     let [answer, setAnswer] = useState('');
     let [disabled, setDisabled] = useState(true);
+    let [percent, setPercent] = useState(0);
 
     if (error) {
         return <div>{error}</div>;
@@ -17,13 +18,14 @@ function Example() {
         setAnswer(e.target.value)
         if (answer !== null) {
             setDisabled(false)
+            setPercent(1);
         }
     }
     return (   
         <div className="main-box">
             <div>
                 <p>검사예시</p>
-                <ProgressBar width={400} percent={0} />
+                <ProgressBar width={400} percent={percent} />
             </div>
             <div>
             <div>

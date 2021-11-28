@@ -37,7 +37,7 @@ const Question = () => {
     const nextPage = () => {
         if (currentPage === Page) {
             sessionStorage.setItem("answer", answerList);
-            history.push('/result');
+            history.push('/last');
         }
         else {
             setCurrentPage(currentPage => (currentPage+1));
@@ -61,13 +61,13 @@ const Question = () => {
                                 type='radio' name={item.qitemNo} value={item.answerScore01} 
                                 defaultChecked={answerList[item.qitemNo-1] === item.answerScore01}
                                 onClick={(handleOnclick)}/>
-                                {item?.answer01}
+                            {item?.answer01}
                         </label>
                         <label>
                             <input type='radio' name={item.qitemNo} value={item.answerScore02} 
                                 defaultChecked={answerList[item.qitemNo-1] === item.answerScore02}
                                 onClick={(handleOnclick)}/>
-                                {item?.answer02}
+                            {item?.answer02}
                         </label>
                     </p>
                     {console.log(answerList)}
@@ -75,7 +75,10 @@ const Question = () => {
             ))}
             <nav style={{ listStyleType: "none", display: "inline-block" }}>
                 <button type="button" onClick={prevPage}>이전</button>
-                <button type="button" disabled={false} onClick={nextPage}>{currentPage === Page ? "제출": "다음"}</button>
+                <button type="button" disabled={(answerList
+								.slice(start, end)
+								.filter((e) => e === 0).length) !== 0} 
+                        onClick={nextPage}>{currentPage === Page ? "제출": "다음"}</button>
             </nav>
         </div>
     </div>

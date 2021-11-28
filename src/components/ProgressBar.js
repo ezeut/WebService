@@ -14,7 +14,7 @@ function ProgressBar ({ width, percent }) {
             <div className="preogress-nav">
                 <span>진행률</span>
                 <div className="progress-bar" style={{ width: width }}>
-                    <div style={{ width: `${value}px` }} className="progress-colored" />
+                    <div className="progress-colored" style={{ width: `${value}px` }} />
                 </div>
             </div>
         </div>
