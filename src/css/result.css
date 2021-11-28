@@ -14,10 +14,12 @@
 }
 .sub-sub-title {
     display: inline-block;
-    width: 240px;
-    height: 20px;
+    font-size: 25px;
+    width: 270px;
+    height: 30px;
+    margin: 30px;
     text-align: center;
-    background-color: lightblue;
+    background-color: rgba(218, 234, 255, 0.9);
 }
 
 .user-table {
@@ -25,17 +27,21 @@
     text-align: center;
 }
 
-.user-table th{
+.user-table th {
     width: 300px;
-    border: 0.5px thin lightblue;
+    background-color: rgba(218, 234, 255, 0.3);
 }
-th {
-    padding: 10px;
+
+table td {
+    padding: 15px;
+    line-height: 30px;
 }
 
 table th {
+    padding: 10px;
     height: 40px;
-    border-bottom: 0.5px thin lightgray;
+    border-bottom: 1px black;
+    background-color: rgba(218, 234, 255, 0.3);
 }
 
 .foot {

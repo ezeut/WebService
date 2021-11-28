@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import "../css/ProgressBar.css";
+import "../css/progressbar.css";
 
 function ProgressBar ({ width, percent }) {
 

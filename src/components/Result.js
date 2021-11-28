@@ -1,12 +1,9 @@
+import '../css/result.css';
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Bar } from 'react-chartjs-2';
-import Chart from 'chart.js/auto';
-import { CategoryScale } from 'chart.js';
 import { useHistory } from 'react-router-dom';
-import '../css/Result.css';
-
-Chart.register(CategoryScale);
+import Chart from 'chart.js/auto';
+import { Bar } from 'react-chartjs-2';
+import axios from 'axios';
 
 const Result = () => {
     const arr = (sessionStorage.getItem('answer')).split(",");
@@ -149,11 +146,11 @@ const Result = () => {
 					</tr>
 				</tbody>
 			</table>
-			<h2 className="sub-result-title"> // 직업가치관 결과 //</h2>
+			<h2 className="sub-result-title"> 직업가치관 결과 </h2>
 			<p>
 				직업생활과 관련하여{' '} {name} 님은{' '} {questionInfo[result[0].num]}(와)과{' '}
 				{questionInfo[result[1].num]}(을)를 가장 중요하게 생각합니다.
-				<br />
+				<br /><br />
 				반면에{' '}{questionInfo[result[result.length - 1].num]},{' '}{questionInfo[result[result.length - 2].num]}
 				은 상대적으로 덜 중요하게 생각합니다.
 			</p>
@@ -164,10 +161,11 @@ const Result = () => {
 				options={{maintainAspectRatio: true,
 				}}
 			/>
-			<br />
-			<h2 className="sub-result-title"> // 나의 가치관과 관련이 높은 직업 //</h2>
+			<br /><br /><br />
+			<hr />
+			<h2 className="sub-result-title">  나의 가치관과 관련이 높은 직업 </h2>
 			<div style={{textAlign: "center"}}><h3 className="sub-sub-title"> / 종사자 평균 학력별 / </h3></div>
-			<table className="">
+			<table className="result-table">
 				<thead>
 					<tr>
 						<th>분야</th>
@@ -176,7 +174,7 @@ const Result = () => {
 				</thead>
 				<tbody>
 					<tr>
-						<th style={{ minWidth: '90px' }}>
+						<th style={{ minWidth: '90px'}}>
 							중졸이하
 						</th>
 						<td>{job[1].join(', ')}</td>
@@ -199,10 +197,11 @@ const Result = () => {
 					</tr>
 				</tbody>
 			</table>
-			<br />
+			<br /><br /><br />
+			<hr />
 			<div style={{textAlign: "center"}}><h3 className="sub-sub-title"> / 종사자 평균 전공별 / </h3></div>
 			
-			<table className="">
+			<table className="result-table">
 				<thead>
 					<tr>
 						<th className="table-th">분야</th>
@@ -255,9 +254,7 @@ const Result = () => {
 						sessionStorage.removeItem('gender');
 						sessionStorage.removeItem('answer');
 						history.push('/');
-					}}
-				>
-					다시 검사
+					}}>다시 검사
 				</button>
 			</p>
 		</div>
