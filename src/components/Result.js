@@ -11,24 +11,17 @@ const Result = () => {
     for (let i = 0; i <arr.length; i++){
         answers += 'B'+(i+1)+'='+ arr[i]+' '
     }
+	const name = sessionStorage.getItem('name');
+	const gender = sessionStorage.getItem('gender');
 	const [result, setResult] = useState([]);
 	const [loading, setLoading] = useState(false);
-	const [job, setJob] = useState();
 	const [major, setMajor] = useState();
+	const [job, setJob] = useState();
 	const [data, setdata] = useState({
-		labels: [
-			'능력발휘',
-			'자율성',
-			'보수',
-			'안정성',
-			'사회적 인정',
-			'사회봉사',
-			'자기계발',
-			'창의성',
-		],
+		labels: ['능력발휘', '보수', '사회적 인정', '사회봉사', '안정성', '자기계발', '자율성', '창의성'],
 		datasets: [
 			{
-				label: '직업가치관 결과',
+				label: '직업 별 가치관',
 				backgroundColor: 'rgba(61, 137, 224,0.4)',
 				hoverBackgroundColor: 'rgba(61, 137, 224,0.8)',
 				data: [],
@@ -48,8 +41,6 @@ const Result = () => {
 		7: '자기계발',
 		8: '창의성',
 	};
-	const name = sessionStorage.getItem('name');
-	const gender = sessionStorage.getItem('gender');
 	
 	useEffect(() => {
 		const params = {
@@ -65,26 +56,24 @@ const Result = () => {
 		const fetch = async () => {
 			const res = await axios.post(
 				'https://www.career.go.kr/inspct/openapi/test/report?apikey=e772916f49d49980fd515f04c9ebc4ba&qestrnSeq=6',
-				params,
+				params
 			);
 			const seq = res.data.RESULT.url.split('seq=')[1];
 			const res2 = await axios.get(
-				'https://www.career.go.kr/inspct/api/psycho/report?seq=' + seq,
+				'https://www.career.go.kr/inspct/api/psycho/report?seq=' + seq
 			);
-			const score = res2.data.result.wonScore
-				.split(' ')
-				.filter((x) => x);
-			const result = score.map((x) => {
-				const split_data = x.split('=');
+			const score = res2.data.result.wonScore.split(' ').filter((x) => x);
+			const result = score.map((item) => {
+				const split_data = item.split('=');
 				return { num: split_data[0], value: parseInt(split_data[1]) };
 			});
 
 			await setdata(() => {
-				let temp = { ...data };
-				temp.datasets[0].data = result.map((x) => {
-					return x.value;
+				let setdata = { ...data };
+				setdata.datasets[0].data = result.map((item) => {
+					return item.value;
 				});
-				return temp;
+				return setdata;
 			});
 
 			result.sort((a, b) => {
@@ -92,15 +81,15 @@ const Result = () => {
 			});
 			setResult(result);
 			const [value1, value2] = [result[0].num, result[1].num];
-			const job_result = await axios.get(
+			const job_res = await axios.get(
 				`https://inspct.career.go.kr/inspct/api/psycho/value/jobs?no1=${value1}&no2=${value2}`,
 			);
-			const major_result = await axios.get(
+			const major_res = await axios.get(
 				`https://inspct.career.go.kr/inspct/api/psycho/value/majors?no1=${value1}&no2=${value2}`,
 			);
 			setJob(() => {
 				const temp = { 1: [], 2: [], 3: [], 4: [], 5: [] };
-				job_result.data.forEach((a) => {
+				job_res.data.forEach((a) => {
 					temp[a[2]].push(a[1]);
 				});
 				return temp;
@@ -109,7 +98,7 @@ const Result = () => {
 				const temp = {
 					0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [],
 				};
-				major_result.data.forEach((a) => {
+				major_res.data.forEach((a) => {
 					if (a[2] !== 0) {
 						temp[0].push(a[1]);
 					}
@@ -123,11 +112,12 @@ const Result = () => {
 	}, []);
 
 	if (!loading) {
-		return <span>Loading...</span>;
+		return <span>결과를 불러오는 중 입니다.</span>;
 	}
 
 	
 	return (
+		<div className="doc">
 		<div className="result-box">
 			<h2 className="result-title">/ 직업가치관검사 결과 /</h2>
 			<table className="user-table">
@@ -146,21 +136,15 @@ const Result = () => {
 					</tr>
 				</tbody>
 			</table>
-			<h2 className="sub-result-title"> 직업가치관 결과 </h2>
-			<p>
+			<h2 className="sub-result-title"> 직업가치관 결과 </h2><br />
+			<p style={{textAlign: "left", fontSize: "20px"}}>
 				직업생활과 관련하여{' '} {name} 님은{' '} {questionInfo[result[0].num]}(와)과{' '}
 				{questionInfo[result[1].num]}(을)를 가장 중요하게 생각합니다.
 				<br /><br />
 				반면에{' '}{questionInfo[result[result.length - 1].num]},{' '}{questionInfo[result[result.length - 2].num]}
 				은 상대적으로 덜 중요하게 생각합니다.
-			</p>
-			<Bar
-				data={data}
-				width={'100px'}
-				height={'50px'}
-				options={{maintainAspectRatio: true,
-				}}
-			/>
+			</p> <br /><br />
+			<Bar data={data} width={'100px'} height={'50px'} />
 			<br /><br /><br />
 			<hr />
 			<h2 className="sub-result-title">  나의 가치관과 관련이 높은 직업 </h2>
@@ -199,8 +183,8 @@ const Result = () => {
 			</table>
 			<br /><br /><br />
 			<hr />
-			<div style={{textAlign: "center"}}><h3 className="sub-sub-title"> / 종사자 평균 전공별 / </h3></div>
-			
+
+			<div style={{textAlign: "center"}}><h3 className="sub-sub-title"> / 종사자 평균 전공별 / </h3></div>	
 			<table className="result-table">
 				<thead>
 					<tr>
@@ -257,6 +241,7 @@ const Result = () => {
 					}}>다시 검사
 				</button>
 			</p>
+		</div>
 		</div>
 	);
 };

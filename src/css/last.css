@@ -10,3 +10,15 @@
     font-family: 'siwol1';
   
   }
+
+.last-box button {
+    display: absolute;
+    font-size: 23px;
+    margin-top: 10px;
+    margin-bottom: 50px;
+    width: 120px;
+    height: 50px;
+    border: 2.2px solid rgb(172, 172, 172);
+    border-radius: 5px;
+    font-family: 'siwol2';
+}

@@ -22,12 +22,14 @@ function Example() {
         }
     }
     return (   
-        <div className="main-box">
-            <div>
-                <p>검사예시</p>
-                <ProgressBar width={400} percent={percent} />
+        <div className="question-main">
+            <div className="question-list">
+                <h1>검사예시</h1> <br/><br/>
+                <ProgressBar width={800} percent={percent} />
             </div>
             <div>
+                <p style={{ textAlign: 'left', lineHeight: '30px', marginBottom:'40px'}}>직업과 관련된 두 개의 가치 중에서 본인에게 더 중요한 가치에 표시하세요.<br/>
+                    가치의 뜻을 잘 모르겠다면 문항 아래에 있는 가치의 설명을 확인해보세요.</p>
             <div>
             {data?.slice(0,1).map((item) => (
                 <div key={item?.qitemNo} className="question-box">
@@ -40,11 +42,11 @@ function Example() {
                 </div>
 
             ))}
-                <div>
+            </div>
+            <div>
                     <Link to="./question">
                         <button type="submit" disabled={disabled}>검사시작</button>
                     </Link>
-                </div>
             </div>
             </div>
         </div>
