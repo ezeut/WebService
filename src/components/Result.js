@@ -141,7 +141,7 @@ const Result = () => {
 				{name} 님은{' '} 직업 가치관에 있어 {' '} {questionInfo[result[0].num]}(와)과{' '}
 				{questionInfo[result[1].num]}(을)를 가장 중요하게 생각합니다.
 				<br /><br />
-				반면에{' '}{questionInfo[result[result.length - 1].num]},{' '}{questionInfo[result[result.length - 2].num]}
+				그에 반해, {' '}{questionInfo[result[result.length - 1].num]},{' '}{questionInfo[result[result.length - 2].num]}
 				은 상대적으로 덜 중요하게 생각합니다.
 			</p> <br /><br />
 			<Bar data={data} width={'100px'} height={'50px'} />
