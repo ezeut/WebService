@@ -112,7 +112,7 @@ const Result = () => {
 	}, []);
 
 	if (!loading) {
-		return <span>결과를 불러오는 중 입니다.</span>;
+		return <span>결과를 불러오는 중 입니다 !</span>;
 	}
 
 	
