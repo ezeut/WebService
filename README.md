@@ -1,3 +1,3 @@
-# 3기_직업심리검사_이름
+# Open API를 이용한 직업심리검사 웹 서비스
 
-직업심리검사서비스 프로젝트 템플릿입니다.
+•	Javascript, React, react-router-dom, axios 사용
